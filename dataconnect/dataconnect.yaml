@@ -1,5 +1,5 @@
 specVersion: "v1beta"
-serviceId: "mombien"
+serviceId: "mombien_test"
 location: "us-central1"
 schema:
   source: "./schema"
@@ -7,6 +7,6 @@ schema:
     postgresql:
       database: "fdcdb"
       cloudSql:
-        instanceId: "mombien-fdc"
+        instanceId: "mombien_test-fdc"
       # schemaValidation: "COMPATIBLE"
 connectorDirs: ["./connector"]

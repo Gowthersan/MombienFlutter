@@ -1,4 +1,4 @@
-package com.example.mombien
+package com.example.mombien_test
 
 import io.flutter.embedding.android.FlutterActivity
 
