@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:mombien_test/config_test/features/annonces/models/proprietes.dart';
 import 'package:mombien_test/config_test/utils/constants/colors.dart';
 import 'package:mombien_test/config_test/utils/constants/sizes.dart';
 
 class TDetailsProprietesCard extends StatelessWidget {
   const TDetailsProprietesCard({
     super.key,
-    required this.propertiesModel,
+    required this.showers,
+    required this.rooms,
+    // required this.property,
   });
 
-  final TPropertiesModel propertiesModel;
+  // final PropertiesModel property;
+  final int showers;
+  final int rooms;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,7 @@ class TDetailsProprietesCard extends StatelessWidget {
                   const SizedBox(
                     width: 4,
                   ),
-                  Text('${propertiesModel.showers}'),
+                  Text('$showers'),
                 ],
               ),
             ),
@@ -62,7 +65,7 @@ class TDetailsProprietesCard extends StatelessWidget {
                   const SizedBox(
                     width: 4,
                   ),
-                  Text('${propertiesModel.rooms}'),
+                  Text('$rooms'),
                 ],
               ),
             ),

@@ -1,11 +1,16 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:mombien_test/config_test/features/annonces/models/proprietes.dart';
 import 'package:mombien_test/config_test/utils/constants/colors.dart';
 
 class CarouselwithIndicatorDemo extends StatefulWidget {
-  final TPropertiesModel propertiesModel;
-  const CarouselwithIndicatorDemo({super.key, required this.propertiesModel});
+  const CarouselwithIndicatorDemo({
+    super.key,
+    required this.images,
+    // required this.property,
+  });
+
+  // final PropertiesModel property;
+  final List<String> images;
 
   @override
   State<CarouselwithIndicatorDemo> createState() =>
@@ -21,9 +26,9 @@ class _CarouselwithIndicatorDemoState extends State<CarouselwithIndicatorDemo> {
       children: [
         CarouselSlider(
           carouselController: _controller,
-          items: widget.propertiesModel.images
-              .map((item) => Image.asset(
-                    item,
+          items: widget.images
+              .map((item) => Image(
+                    image: NetworkImage(item),
                     fit: BoxFit.cover,
                     width: 1000,
                   ))
@@ -42,7 +47,7 @@ class _CarouselwithIndicatorDemoState extends State<CarouselwithIndicatorDemo> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: widget.propertiesModel.images.asMap().entries.map((entry) {
+          children: widget.images.asMap().entries.map((entry) {
             return GestureDetector(
               onTap: () {},
               child: Container(

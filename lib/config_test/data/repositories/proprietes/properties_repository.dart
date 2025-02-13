@@ -76,11 +76,32 @@ class PropertyRepository extends GetxController {
   // Fonction pour récupérer toutes les propriétés
   Future<List<PropertiesModel>> getAllProperties() async {
     try {
-      QuerySnapshot snapshot = await _db.collection("Properties").get();
-      return snapshot.docs.map((doc) {
-        return PropertiesModel.fromSnapshot(
-            doc as DocumentSnapshot<Map<String, dynamic>>);
-      }).toList();
+      final snapshot = await _db.collection("Properties").get();
+      final list = snapshot.docs
+          .map((doc) => PropertiesModel.fromSnapshot(doc))
+          .toList();
+      return list;
+    } on FirebaseException catch (e) {
+      throw TFirebaseException(e.code).message;
+    } on FormatException catch (_) {
+      throw const TFormatException();
+    } on PlatformException catch (e) {
+      throw TPlatformException(e.code).message;
+    } catch (e) {
+      throw 'On dirait qu\'il y a un probleme. Veuillez reessayer.';
+    }
+  }
+
+  Future<List<PropertiesModel>> getFavoritesProperties(
+      List<String> propertyId) async {
+    try {
+      final snapshot = await _db
+          .collection("Properties")
+          .where(FieldPath.documentId, whereIn: propertyId)
+          .get();
+      return snapshot.docs
+          .map((querySnapshot) => PropertiesModel.fromSnapshot(querySnapshot))
+          .toList();
     } on FirebaseException catch (e) {
       throw TFirebaseException(e.code).message;
     } on FormatException catch (_) {
@@ -115,20 +136,11 @@ class PropertyRepository extends GetxController {
   }
 
   //Fonction pour mettre à jour un seul champ
-  Future<void> updatePSingleField(Map<String, dynamic> json) async {
+  Future<void> updatePSingleField(
+      Map<String, dynamic> json, String propertyId) async {
     try {
-      // Vérifiez que le JSON contient l'ID
-      if (!json.containsKey('id') || json['id'] == null || json['id'].isEmpty) {
-        throw const FormatException(
-            'Le champ "id" est requis pour la mise à jour.');
-      }
-
-      // Créez une instance de PropertiesModel
-      final PropertiesModel property = PropertiesModel.fromSnapshot(
-          await _db.collection("Properties").doc(json['id']).get());
-
       // Mettre à jour le document avec les champs fournis
-      await _db.collection("Properties").doc(property.id).update(json);
+      await _db.collection("Properties").doc(propertyId).update(json);
     } on FirebaseException catch (e) {
       throw TFirebaseException(e.code).message;
     } on FormatException catch (_) {
@@ -161,7 +173,7 @@ class PropertyRepository extends GetxController {
   Future<String> uploadImage(String folderPath, XFile image) async {
     try {
       // Générer un nom de fichier unique avec extension
-      final uuid = Uuid();
+      const uuid = Uuid();
       final extension = image.path.split('.').last;
       final fileName = '${uuid.v4()}.$extension';
 

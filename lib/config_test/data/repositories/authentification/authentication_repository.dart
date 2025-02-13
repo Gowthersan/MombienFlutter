@@ -13,6 +13,7 @@ import 'package:mombien_test/config_test/utils/exceptions/firebase_auth_exceptio
 import 'package:mombien_test/config_test/utils/exceptions/firebase_exceptions.dart';
 import 'package:mombien_test/config_test/utils/exceptions/format_exceptions.dart';
 import 'package:mombien_test/config_test/utils/exceptions/platform_exceptions.dart';
+import 'package:mombien_test/config_test/utils/local_storage/storage_utility.dart';
 import 'package:mombien_test/navigation_menu.dart';
 
 class AuthenticationRepository extends GetxController {
@@ -35,6 +36,10 @@ class AuthenticationRepository extends GetxController {
     final user = _auth.currentUser;
     if (user != null) {
       if (user.emailVerified) {
+        // Initialiser les sauvegardes d'un utilisateur spécifique
+        await TLocalStorage.init(user.uid);
+
+        //Si l'utilisateur est enregistrer direction l'accueil
         Get.offAll(() => const NavigationMenu());
       } else {
         Get.offAll(() => VerifyEmailScreen(email: _auth.currentUser?.email));

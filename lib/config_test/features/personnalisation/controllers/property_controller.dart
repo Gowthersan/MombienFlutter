@@ -1,23 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mombien_test/config_test/data/repositories/authentification/authentication_repository.dart';
 import 'package:mombien_test/config_test/data/repositories/proprietes/properties_repository.dart';
-import 'package:mombien_test/config_test/features/annonces/screens/proprietes/propriete_page.dart';
+import 'package:mombien_test/config_test/features/annonces/controllers/category_controller.dart';
 import 'package:mombien_test/config_test/features/personnalisation/controllers/user_controller.dart';
 import 'package:mombien_test/config_test/features/personnalisation/models/proprietes/propriete_model.dart';
-import 'package:mombien_test/config_test/utils/constants/image_strings.dart';
+import 'package:mombien_test/config_test/features/personnalisation/models/proprietes/status_types.dart';
 import 'package:mombien_test/config_test/utils/helpers/network_manager.dart';
 import 'package:mombien_test/config_test/utils/popups/full_screen_loader.dart';
 import 'package:mombien_test/config_test/utils/popups/loaders.dart';
+import 'package:mombien_test/core.dart';
 
 class PropertiesController extends GetxController {
   static PropertiesController get instance => Get.find();
 
   // Variables observables
   final imageUploading = false.obs;
+  final isLoading = false.obs;
   final Rx<PropertiesModel> property = PropertiesModel.empty().obs;
+  final Rx<PropertiesModel> selectedProperty = PropertiesModel.empty().obs;
+
   final propertyRepo = Get.put(PropertyRepository());
   final userController = Get.put(UserController());
+  RxList<PropertiesModel> allProperties =
+      <PropertiesModel>[].obs; // Liste de toutes les proprietés
+
   RxBool imagesReadyForSave = false.obs; // Observable boolean
   final RxList<XFile> selectedImages = RxList<
       XFile>(); // Observable list  // Indique si les images sont prêtes à être sauvegardées
@@ -32,11 +40,35 @@ class PropertiesController extends GetxController {
   final price = TextEditingController();
   final showers = TextEditingController();
   final livingRoom = TextEditingController();
-  final category = TextEditingController();
-  final status = TextEditingController();
+  final category = Get.put(CategoryController());
+  final status = Get.put(StatusDropdownController());
 
   // Clé de formulaire pour la validation
   GlobalKey<FormState> propertiesFormKey = GlobalKey<FormState>();
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchPropertyDetails();
+  }
+
+  Future<void> fetchPropertyDetails() async {
+    try {
+      isLoading.value = true;
+      final properties = await propertyRepo.getAllProperties();
+      // final property = await propertyRepo.fetchPropertyDetails();
+      allProperties.assignAll(properties);
+      // this.property(property);
+    } catch (e) {
+      property(PropertiesModel.empty());
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void selectProperty(PropertiesModel property) {
+    selectedProperty.value = property;
+  }
 
   Future<void> createProperty(PropertiesModel property) async {
     try {
@@ -76,8 +108,8 @@ class PropertiesController extends GetxController {
         price: double.parse(price.text.trim()),
         showers: int.parse(showers.text.trim()),
         livingRoom: int.parse(livingRoom.text.trim()),
-        category: category.text.trim(),
-        status: status.text.trim(),
+        category: category.selectedCategory.value,
+        status: status.selectedStatus.value,
         owner: userController.user.value.username,
       );
 
@@ -87,11 +119,17 @@ class PropertiesController extends GetxController {
       //Fermer le chargement
       TFullScreenLoader.stopLoading();
 
+      //Aller vers la page de succès
+      Get.off(() => SucessScreen(
+            image: TImages.successfullyRegisterAnimation,
+            title: 'Ajouté avec succès',
+            subTitle:
+                'Votre bien a été ajouté avec succès ! Consulter vos propriétés sur votre inventaire maintenant !',
+            onPressed: () => AuthenticationRepository.instance.screenRedirect(),
+          ));
+
       TLoaders.successSnackBar(
           title: 'Succès', message: 'Sauvegarde effectuée');
-
-      //Aller vers la page de vérification de mail
-      Get.to(() => const ProprieteScreen());
     } catch (e) {
       TFullScreenLoader.stopLoading();
       TLoaders.warningSnackBar(
@@ -187,6 +225,7 @@ class PropertiesController extends GetxController {
     }
   }
 
+  @override
   Future<void> refresh() async {
     // Fetch the latest data from the server or update the properties
     // based on the current state

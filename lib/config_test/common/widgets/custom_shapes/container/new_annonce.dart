@@ -1,49 +1,45 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:mombien_test/config_test/common/widgets/custom_shapes/buttons/add_favoris.dart';
-import 'package:mombien_test/config_test/features/annonces/models/proprietes.dart';
+import 'package:mombien_test/config_test/common/widgets/shimmers/shimmer.dart';
 import 'package:mombien_test/config_test/features/annonces/models/widgets/details_proprietes.dart';
-import 'package:mombien_test/config_test/features/annonces/screens/proprietes/details_proprietes_page.dart';
+import 'package:mombien_test/config_test/features/personnalisation/models/proprietes/propriete_model.dart';
 import 'package:mombien_test/config_test/utils/constants/colors.dart';
 import 'package:mombien_test/config_test/utils/constants/sizes.dart';
 
 class TPAnnonces extends StatelessWidget {
   const TPAnnonces({
     super.key,
-    required this.propertiesModel,
+    required this.thumbnail,
+    required this.price,
+    required this.rating,
+    required this.title,
+    required this.subTitle,
+    required this.rooms,
+    required this.showers,
+    this.onTap,
+    required this.property,
+    // required this.property,
   });
 
-  final TPropertiesModel propertiesModel;
+  final PropertiesModel property;
+  final String thumbnail;
+  final double price, rating;
+  final String title, subTitle;
+  final int rooms, showers;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
+    // final propertyController = Get.put(PropertiesController());
+
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) {
-            return TDetailsProprietesPage(
-              propertiesModel: propertiesModel,
-            );
-          },
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            const begin = Offset(1.0, 0.0); // L'animation commence à droite
-            const end =
-                Offset.zero; // L'animation se termine à la position normale
-            const curve = Curves.ease;
-            var tween =
-                Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-            var offsetAnimation = animation.drive(tween);
-            return SlideTransition(
-              position: offsetAnimation,
-              child: child,
-            );
-          },
-        ),
-      ),
+      // onTap: () {},
+      onTap: onTap,
       child: Container(
           width: double.infinity,
-          height: 300,
+          height: 400,
           padding: const EdgeInsets.all(TSizes.defaultSpace - 15),
           margin: const EdgeInsets.only(right: 8, top: 12, bottom: 12),
           decoration: BoxDecoration(
@@ -56,26 +52,35 @@ class TPAnnonces extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image(
-                      height: TSizes.annoncesItemHeight,
-                      width: double.infinity,
-                      image: AssetImage(propertiesModel.thumbnail),
+                    child: CachedNetworkImage(
                       fit: BoxFit.cover,
+                      // color: overlayColor,
+                      imageUrl: thumbnail,
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) =>
+                              const TShimmerEffect(
+                                  width: double.infinity,
+                                  height: 100,
+                                  radius: 12),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                     ),
                   ),
-                  const Positioned(
+                  Positioned(
                     top: 10,
                     right: 10,
                     child: TAddFavoris(
                       size: 28,
+                      propertyId: property.id!,
                     ), // Ajoutez le bien dans les favoris
                   ),
                   Positioned(
                     bottom: 8,
                     left: 8,
                     child: TDetailsProprietesCard(
-                        propertiesModel:
-                            propertiesModel), // Détails du bien par le nombre de chambre et de douche
+                        showers: showers,
+                        rooms:
+                            rooms), // Détails du bien par le nombre de chambre et de douche
                   ),
                 ],
               ),
@@ -83,7 +88,7 @@ class TPAnnonces extends StatelessWidget {
                 height: TSizes.spaceBtwItems,
               ),
               Text(
-                propertiesModel.title,
+                title,
                 style: Theme.of(context)
                     .textTheme
                     .labelMedium!
@@ -96,7 +101,7 @@ class TPAnnonces extends StatelessWidget {
                 height: TSizes.xs,
               ),
               Text(
-                propertiesModel.subTitle,
+                subTitle,
                 style: Theme.of(context)
                     .textTheme
                     .labelMedium!
@@ -119,14 +124,16 @@ class TPAnnonces extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        Text(
-                          '\$${propertiesModel.price} - \$${propertiesModel.price / 10}/mois', //Afficher le prix
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .apply(color: TColors.light),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                        Expanded(
+                          child: Text(
+                            '\$$price - \$${price / 10}/mois', //Afficher le prix
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .apply(color: TColors.light),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),
@@ -135,7 +142,7 @@ class TPAnnonces extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '${propertiesModel.rating}',
+                        '$rating',
                         style: Theme.of(context)
                             .textTheme
                             .headlineSmall!

@@ -9,50 +9,50 @@ import 'package:mombien_test/config_test/common/widgets/custom_shapes/container/
 import 'package:mombien_test/config_test/common/widgets/texts/section_heading.dart';
 import 'package:mombien_test/config_test/common/widgets/utiles_widgets/divided_widget.dart';
 import 'package:mombien_test/config_test/features/annonces/models/details_annonces.dart';
-import 'package:mombien_test/config_test/features/annonces/models/proprietes.dart';
 import 'package:mombien_test/config_test/features/annonces/models/widgets/rating_annonces.dart';
-import 'package:mombien_test/config_test/features/annonces/screens/cart/cart.dart';
 import 'package:mombien_test/config_test/features/annonces/screens/proprietes/proprietes_reviews.dart';
 import 'package:mombien_test/config_test/features/annonces/screens/proprietes/widgets/slider_images.dart';
+import 'package:mombien_test/config_test/features/personnalisation/models/proprietes/propriete_model.dart';
 import 'package:mombien_test/config_test/utils/constants/colors.dart';
 import 'package:mombien_test/config_test/utils/constants/sizes.dart';
 import 'package:mombien_test/config_test/utils/helpers/helper_functions.dart';
+import 'package:mombien_test/config_test/utils/logging/logger.dart';
 
 class TDetailsProprietesPage extends StatelessWidget {
-  final TPropertiesModel propertiesModel;
-
   const TDetailsProprietesPage({
     super.key,
-    required this.propertiesModel,
+    required this.property,
   });
+
+  final PropertiesModel property;
+  // final String id;
+  // final int rooms, floors, livingRoom, showers;
+  // final double area, price, rating;
+  // final String title, description, subTitle, category;
+  // final List<String> images;
 
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
+
     final List<TDetailsModel> details = [
+      TDetailsModel(icon: Icons.bathtub, detail: '${property.showers} douches'),
+      TDetailsModel(icon: Icons.bed, detail: '${property.rooms} chambres'),
+      TDetailsModel(icon: Icons.stairs, detail: '${property.floors} étages'),
       TDetailsModel(
-          icon: Icons.bathtub, detail: '${propertiesModel.showers} douches'),
-      TDetailsModel(
-          icon: Icons.bed, detail: '${propertiesModel.rooms} chambres'),
-      TDetailsModel(
-          icon: Icons.stairs, detail: '${propertiesModel.floors} étages'),
-      TDetailsModel(
-          icon: Icons.living, detail: '${propertiesModel.livingRoom} salons'),
-      TDetailsModel(
-          icon: Icons.square_foot, detail: '${propertiesModel.area} m²'),
+          icon: Icons.living, detail: '${property.livingRoom} salons'),
+      TDetailsModel(icon: Icons.square_foot, detail: '${property.area} m²'),
     ];
 
+    TLoggerHelper.debug('Property ID: ${property.id}');
+
     return Scaffold(
-      backgroundColor:
-          THelperFunctions.isDarkMode(context) ? TColors.black : TColors.white,
       body: Stack(
         children: [
           SingleChildScrollView(
             child: Column(
               children: [
-                CarouselwithIndicatorDemo(
-                  propertiesModel: propertiesModel,
-                ),
+                CarouselwithIndicatorDemo(images: property.images),
                 const SizedBox(
                   height: TSizes.spaceBtwItems,
                 ),
@@ -63,7 +63,7 @@ class TDetailsProprietesPage extends StatelessWidget {
                     children: [
                       ///Prix de la propriété
                       Text(
-                        ' \$${propertiesModel.price} - ${propertiesModel.category}',
+                        ' \$${property.price} - ${property.category}',
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium!
@@ -78,9 +78,8 @@ class TDetailsProprietesPage extends StatelessWidget {
 
                       ///Disponibilité
                       TUtilsWidget(
-                        propertiesModel: propertiesModel,
                         location: 'Disponible',
-                        price: propertiesModel.price,
+                        price: property.price,
                       ),
                       const SizedBox(
                         height: TSizes.md,
@@ -89,7 +88,7 @@ class TDetailsProprietesPage extends StatelessWidget {
                       ///Nom et localisation de la propriété
                       Row(children: [
                         Text(
-                          propertiesModel.title,
+                          property.title,
                           style: Theme.of(context)
                               .textTheme
                               .labelMedium!
@@ -111,20 +110,23 @@ class TDetailsProprietesPage extends StatelessWidget {
                           const SizedBox(
                             width: TSizes.sm,
                           ),
-                          Text(
-                            propertiesModel.subTitle,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium!
-                                .apply(
-                                    color:
-                                        dark ? TColors.light : TColors.black),
+                          Expanded(
+                            child: Text(
+                              property.subTitle,
+                              softWrap: true,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .apply(
+                                      color:
+                                          dark ? TColors.light : TColors.black),
+                            ),
                           ),
                         ],
                       ),
 
                       const SizedBox(
-                        height: TSizes.spaceBtwSections,
+                        height: TSizes.spaceBtwSections - 8,
                       ),
                       Divider(
                         color: dark ? TColors.grey : TColors.darkerGrey,
@@ -162,7 +164,7 @@ class TDetailsProprietesPage extends StatelessWidget {
 
                       /// --Text Container
                       TRoundedTextContainer(
-                        text: propertiesModel.description,
+                        text: property.description,
                         textColor: TColors.light,
                         color: dark ? TColors.darkerGrey : TColors.darkGrey,
                         borderRadius: const BorderRadius.all(
@@ -180,7 +182,7 @@ class TDetailsProprietesPage extends StatelessWidget {
                       ),
 
                       ///Notations
-                      TRatingWidget(rating: propertiesModel.rating),
+                      TRatingWidget(rating: property.rating),
 
                       //
                       const SizedBox(
@@ -202,8 +204,7 @@ class TDetailsProprietesPage extends StatelessWidget {
                           ),
                           IconButton(
                               onPressed: () => Get.to(
-                                    () => ProprietesReviewsScreen(
-                                        propertiesModel: propertiesModel),
+                                    () => const ProprietesReviewsScreen(),
                                     transition: Transition.rightToLeft,
                                   ),
                               icon:
@@ -229,7 +230,7 @@ class TDetailsProprietesPage extends StatelessWidget {
               ],
             ),
           ),
-          const Positioned(
+          Positioned(
             top: 50,
             right: 20,
             child: Align(
@@ -238,11 +239,11 @@ class TDetailsProprietesPage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding:
-                        EdgeInsets.only(right: 8.0), // Espace entre les boutons
-                    child: TAddFavoris(size: 36),
+                    padding: const EdgeInsets.only(
+                        right: 8.0), // Espace entre les boutons
+                    child: TAddFavoris(size: 36, propertyId: property.id!),
                   ),
-                  TShareButton(size: 28),
+                  const TShareButton(size: 28),
                 ],
               ),
             ),
@@ -266,8 +267,7 @@ class TDetailsProprietesPage extends StatelessWidget {
                       text: '', icon: Iconsax.message, showIcon: true),
                   TButtonElevated(
                     text: 'Prendre rendez-vous',
-                    onTap: () => Get.to(() => const CartScreen(),
-                        transition: Transition.rightToLeft),
+                    onTap: () {},
                     width: 240,
                   )
                 ],

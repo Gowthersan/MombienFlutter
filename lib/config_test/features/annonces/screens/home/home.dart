@@ -78,14 +78,7 @@ class HomeScreen extends StatelessWidget {
             /// Body
             const Padding(
               padding: EdgeInsets.all(TSizes.defaultSpace),
-              child: TPromoSlider(
-                banners: [
-                  TImages.promoBanner1,
-                  TImages.promoBanner2,
-                  TImages.promoBanner3,
-                  TImages.promoBanner4,
-                ],
-              ),
+              child: TPromoSlider(),
             ),
             const SizedBox(
               height: TSizes.spaceBtwItems,
@@ -142,7 +135,7 @@ class HomeScreen extends StatelessWidget {
             //             final TPropertiesModel propertiesModel =
             //                 properties[index];
             //             return TProprietesCard(
-            //                 propertiesModel: propertiesModel);
+            //                 );
             //           },
             //         ),
             //       ),

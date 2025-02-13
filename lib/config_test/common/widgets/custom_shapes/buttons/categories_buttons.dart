@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mombien_test/config_test/features/annonces/models/categories.dart';
 import 'package:mombien_test/config_test/features/annonces/screens/home/categories_page.dart';
 import 'package:mombien_test/config_test/utils/constants/sizes.dart';
 
 class TCategoriesButton extends StatelessWidget {
-  final TCategoriesModel categoryModel;
+  // final TCategoriesModel categoryModel;
 
   const TCategoriesButton({
     super.key,
-    required this.categoryModel,
+    // required this.categoryModel,
+    required this.name,
+    required this.icon,
   });
+
+  final String name;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Get.to(
-        () => TCategoriesPage(categoryModel: categoryModel),
+        () => TCategoriesPage(name: name),
         transition: Transition.rightToLeft,
       ),
-      child: TContainerForm(categoryModel: categoryModel),
+      child: TContainerForm(name: name, icon: icon),
     );
   }
 }
@@ -27,10 +31,15 @@ class TCategoriesButton extends StatelessWidget {
 class TContainerForm extends StatelessWidget {
   const TContainerForm({
     super.key,
-    required this.categoryModel,
+    required this.icon,
+    required this.name,
+    // required this.category,
   });
 
-  final TCategoriesModel categoryModel;
+  // final TCategoriesModel categoryModel;
+  // final CategoryModel category;
+  final IconData icon;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +54,7 @@ class TContainerForm extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            categoryModel.title,
+            name,
             style: Theme.of(context).textTheme.labelMedium!.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
@@ -54,7 +63,7 @@ class TContainerForm extends StatelessWidget {
             child: ClipRRect(
               borderRadius: const BorderRadius.only(),
               child: Icon(
-                categoryModel.icon,
+                icon,
                 size: TSizes.iconMd,
               ),
             ),

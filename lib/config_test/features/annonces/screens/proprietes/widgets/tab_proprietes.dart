@@ -1,15 +1,21 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mombien_test/config_test/common/widgets/custom_shapes/container/mini_box_proprietes.dart';
 import 'package:mombien_test/config_test/common/widgets/texts/section_heading.dart';
-import 'package:mombien_test/config_test/features/annonces/models/proprietes.dart';
+import 'package:mombien_test/config_test/features/annonces/screens/proprietes/details_proprietes_page.dart';
+import 'package:mombien_test/config_test/features/personnalisation/controllers/property_controller.dart';
+import 'package:mombien_test/config_test/features/personnalisation/models/proprietes/propriete_model.dart';
 import 'package:mombien_test/core.dart';
 
 Widget TStatutTab(String status, String tabTitle) {
-  List<TPropertiesModel> filteredProperties = status == 'Toutes'
-      ? properties
-      : properties.where((property) => property.status == status).toList();
+  final controller = Get.put(PropertiesController());
+  List<PropertiesModel> filteredProperties = status == 'Toutes'
+      ? controller.allProperties
+      : controller.allProperties
+          .where((property) => property.status == status)
+          .toList();
 
   return SingleChildScrollView(
     child: Padding(
@@ -36,10 +42,15 @@ Widget TStatutTab(String status, String tabTitle) {
             itemBuilder: (context, index) {
               final dark = THelperFunctions.isDarkMode(context);
               final isLastItem = index == filteredProperties.length - 1;
+              final property = filteredProperties[index];
               return Column(
                 children: [
                   TOwnPropriete(
-                    propertiesModel: filteredProperties[index],
+                    property: property,
+                    onTap: () => Get.to(
+                      () => TDetailsProprietesPage(property: property),
+                      transition: Transition.rightToLeft,
+                    ),
                   ),
                   if (!isLastItem) // Le trait ne s'affichera pas au dernier bien
                     Divider(

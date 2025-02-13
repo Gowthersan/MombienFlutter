@@ -1,30 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:mombien_test/config_test/features/annonces/models/proprietes.dart';
 import 'package:mombien_test/config_test/features/annonces/screens/home/widgets/annonces.dart';
-import 'package:mombien_test/config_test/features/annonces/screens/proprietes/details_proprietes_page.dart';
 import 'package:mombien_test/config_test/utils/constants/colors.dart';
 import 'package:mombien_test/config_test/utils/constants/sizes.dart';
 
 class TProprietesCard extends StatelessWidget {
   const TProprietesCard({
     super.key,
-    required this.propertiesModel,
+    required this.thumbnail,
+    required this.title,
+    required this.subTitle,
+    required this.showers,
+    required this.rooms,
+    required this.rating,
+    required this.price,
+    required this.id,
+    this.onTap,
+    // required this.property,
   });
 
-  final TPropertiesModel propertiesModel;
+  // final PropertiesModel property;
+  final String thumbnail, title, subTitle, id;
+  final int showers, rooms;
+  final double rating, price;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
+    // final propertyController = Get.put(PropertiesController());
     return GestureDetector(
-      onTap: () => Get.to(
-        () => TDetailsProprietesPage(propertiesModel: propertiesModel),
-        transition: Transition.rightToLeft,
-      ),
+      // onTap: () {},
+      onTap: onTap,
       child: Stack(
         children: [
-          TModelAnnonces(propertiesModel: propertiesModel),
+          TModelAnnonces(
+              thumbnail: thumbnail,
+              title: title,
+              subTitle: subTitle,
+              showers: showers,
+              id: id,
+              rooms: showers),
           Positioned(
             bottom: 14,
             left: 12,
@@ -37,7 +52,7 @@ class TProprietesCard extends StatelessWidget {
                 color: TColors.primary,
               ),
               child: Text(
-                '\$${propertiesModel.price} - \$${propertiesModel.price / 10}/mois',
+                '\$$price - \$${price / 10}/mois',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis, //Afficher le prix
                 style: Theme.of(context)
@@ -54,7 +69,7 @@ class TProprietesCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '${propertiesModel.rating}',
+                    '$rating',
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge!

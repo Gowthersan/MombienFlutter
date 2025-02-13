@@ -1,50 +1,59 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:mombien_test/config_test/utils/constants/colors.dart';
-import 'package:mombien_test/config_test/utils/constants/sizes.dart';
+import 'package:mombien_test/config_test/features/annonces/controllers/favoris_controller.dart';
 
-class TAddFavoris extends StatefulWidget {
-  const TAddFavoris({
-    super.key,
-    required this.size,
-  });
+class TAddFavoris extends StatelessWidget {
+  const TAddFavoris({super.key, required this.propertyId, this.size});
 
-  final double size;
-  // final Color color;
+  final String propertyId;
+  final double? size;
 
   @override
-  _TAddFavorisState createState() => _TAddFavorisState();
+  Widget build(BuildContext context) {
+    final controller = Get.put(FavoritesController());
+    return Obx(() {
+      return TCircularFavorisButton(
+        icon:
+            controller.isFavorite(propertyId) ? Iconsax.heart5 : Iconsax.heart,
+        color: controller.isFavorite(propertyId) ? Colors.red : Colors.black,
+        size: size,
+        onPressed: () => controller.toggleFavoriteProperty(propertyId),
+      );
+    });
+  }
 }
 
-class _TAddFavorisState extends State<TAddFavoris> {
-  bool _isFavorited = false;
+class TCircularFavorisButton extends StatelessWidget {
+  const TCircularFavorisButton({
+    super.key,
+    this.size,
+    required this.color,
+    required this.icon,
+    this.onPressed,
+  });
+
+  final double? size;
+  final Color color;
+  final IconData icon;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          _isFavorited = !_isFavorited;
-          // Ajoutez ici l'action à effectuer lorsque l'icône est cliquée
-        });
-      },
+      onTap: onPressed,
       child: Container(
-        padding: const EdgeInsets.all(TSizes.xs),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: TColors.grey.withOpacity(0.7),
-          borderRadius: BorderRadius.circular(TSizes.buttonWidth),
+          color: Colors.grey.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(8),
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              _isFavorited ? Iconsax.heart5 : Iconsax.heart,
-              color: _isFavorited ? Colors.red : TColors.black,
-              size: widget.size,
-            ),
-          ],
+        child: Icon(
+          icon,
+          color: color,
+          size: size,
         ),
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mombien_test/config_test/bindings/general_bindings.dart';
 import 'package:mombien_test/core.dart';
+import 'package:mombien_test/routes/app_routes.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -13,6 +14,7 @@ class App extends StatelessWidget {
       theme: TAppTheme.lightTheme,
       darkTheme: TAppTheme.darkTheme,
       initialBinding: GeneralBindings(),
+      getPages: AppRoutes.pages,
       home: const Scaffold(
         backgroundColor: TColors.primary,
         body: Center(

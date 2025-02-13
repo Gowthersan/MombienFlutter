@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mombien_test/config_test/features/annonces/models/proprietes.dart';
 import 'package:mombien_test/config_test/utils/constants/colors.dart';
 import 'package:mombien_test/config_test/utils/constants/sizes.dart';
 import 'package:mombien_test/config_test/utils/helpers/helper_functions.dart';
@@ -7,7 +6,6 @@ import 'package:mombien_test/config_test/utils/helpers/helper_functions.dart';
 class TUtilsWidget extends StatelessWidget {
   const TUtilsWidget({
     super.key,
-    required this.propertiesModel,
     this.width = 250,
     required this.location,
     required this.price,
@@ -15,9 +13,7 @@ class TUtilsWidget extends StatelessWidget {
 
   final double width;
   final String location;
-  final int price;
-
-  final TPropertiesModel propertiesModel;
+  final double price;
 
   @override
   Widget build(BuildContext context) {

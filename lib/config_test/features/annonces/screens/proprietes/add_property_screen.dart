@@ -6,6 +6,8 @@ import 'package:mombien_test/config_test/common/widgets/products/chat/notificati
 import 'package:mombien_test/config_test/common/widgets/shimmers/shimmer.dart';
 import 'package:mombien_test/config_test/features/annonces/screens/proprietes/widgets/images_preview.dart';
 import 'package:mombien_test/config_test/features/personnalisation/controllers/property_controller.dart';
+import 'package:mombien_test/config_test/features/personnalisation/models/proprietes/categories_type.dart';
+import 'package:mombien_test/config_test/features/personnalisation/models/proprietes/status_types.dart';
 import 'package:mombien_test/core.dart';
 
 class AddPropertyScreen extends StatelessWidget {
@@ -63,7 +65,7 @@ class AddPropertyScreen extends StatelessWidget {
                                       size: 50, color: Colors.grey),
                                   SizedBox(height: 10),
                                   Text(
-                                    "Appuyez pour sélectionner jusqu'à 10 images",
+                                    "Appuyez pour sélectionner jusqu'à 5 images",
                                     style: TextStyle(color: Colors.grey),
                                     textAlign: TextAlign.center,
                                   ),
@@ -88,7 +90,7 @@ class AddPropertyScreen extends StatelessWidget {
                           expands: false,
                           decoration: const InputDecoration(
                             prefixIcon: Icon(Iconsax.house),
-                            labelText: 'Property Name',
+                            labelText: 'Nom du bien',
                           ),
                         ),
                         const SizedBox(height: TSizes.spaceBtwInputFields),
@@ -102,7 +104,7 @@ class AddPropertyScreen extends StatelessWidget {
                           textAlignVertical: TextAlignVertical.top,
                           decoration: const InputDecoration(
                             prefixIcon: Icon(Iconsax.location),
-                            labelText: 'Location',
+                            labelText: 'Localisation',
                           ),
                         ),
                         const SizedBox(height: TSizes.spaceBtwInputFields),
@@ -115,8 +117,8 @@ class AddPropertyScreen extends StatelessWidget {
                               null, // Laisse le champ s'agrandir indéfiniment
                           textAlignVertical: TextAlignVertical.top,
                           decoration: const InputDecoration(
-                            prefixIcon: Icon(Iconsax.note),
-                            labelText: "Saisissez votre description ici...",
+                            prefixIcon: Icon(Iconsax.archive_book),
+                            labelText: "Saisissez la description ici...",
                           ),
                         ),
                         const SizedBox(height: TSizes.spaceBtwInputFields),
@@ -124,57 +126,35 @@ class AddPropertyScreen extends StatelessWidget {
                           children: [
                             Expanded(
                               child: TextFormField(
+                                keyboardType: TextInputType.number,
                                 controller: controller.rooms,
                                 validator: (value) =>
                                     TValidator.validateRoomCount(value),
                                 expands: false,
                                 decoration: const InputDecoration(
-                                  prefixIcon: Icon(Iconsax.user),
-                                  labelText: 'Rooms',
+                                  prefixIcon: Icon(Icons.bed_outlined),
+                                  labelText: 'Chambres',
                                 ),
                               ),
                             ),
                             const SizedBox(width: TSizes.spaceBtwInputFields),
                             Expanded(
                               child: TextFormField(
-                                controller: controller.area,
-                                validator: (value) =>
-                                    TValidator.validateSurfaceArea(value),
-                                expands: false,
-                                decoration: const InputDecoration(
-                                  prefixIcon: Icon(Iconsax.user),
-                                  labelText: 'Area',
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: TSizes.spaceBtwInputFields),
-                            Expanded(
-                              child: TextFormField(
+                                keyboardType: TextInputType.number,
                                 controller: controller.floors,
                                 validator: (value) =>
                                     TValidator.validateEmptyText(
-                                        'Floor', value),
+                                        'Nombre d\'étages', value),
                                 expands: false,
                                 decoration: const InputDecoration(
-                                  prefixIcon: Icon(Iconsax.user),
-                                  labelText: 'Floors',
+                                  prefixIcon: Icon(Iconsax.element_equal),
+                                  labelText: 'Etages',
                                 ),
                               ),
                             ),
                           ],
                         ),
 
-                        const SizedBox(height: TSizes.spaceBtwInputFields),
-                        TextFormField(
-                          keyboardType: TextInputType.number,
-                          controller: controller.price,
-                          validator: (value) => TValidator.validatePrice(value),
-                          expands: false,
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Iconsax.location),
-                            labelText: 'Price',
-                          ),
-                        ),
                         const SizedBox(height: TSizes.spaceBtwInputFields),
                         Row(
                           children: [
@@ -184,11 +164,11 @@ class AddPropertyScreen extends StatelessWidget {
                                 controller: controller.showers,
                                 validator: (value) =>
                                     TValidator.validateEmptyText(
-                                        'Showers', value),
+                                        'Nombre de salle de bain', value),
                                 expands: false,
                                 decoration: const InputDecoration(
-                                  prefixIcon: Icon(Iconsax.location),
-                                  labelText: 'Showers',
+                                  prefixIcon: Icon(Icons.shower_outlined),
+                                  labelText: 'Salles de bain',
                                 ),
                               ),
                             ),
@@ -199,47 +179,51 @@ class AddPropertyScreen extends StatelessWidget {
                                 controller: controller.livingRoom,
                                 validator: (value) =>
                                     TValidator.validateEmptyText(
-                                        'Living Room', value),
+                                        'Nombre de salons', value),
                                 expands: false,
                                 decoration: const InputDecoration(
-                                  prefixIcon: Icon(Iconsax.activity),
-                                  labelText: 'Living Room',
+                                  prefixIcon: Icon(Icons.living_outlined),
+                                  labelText: 'Salons',
                                 ),
                               ),
                             ),
                           ],
                         ),
                         const SizedBox(height: TSizes.spaceBtwInputFields),
-                        Row(
+                        TextFormField(
+                          keyboardType: TextInputType.number,
+                          controller: controller.area,
+                          validator: (value) =>
+                              TValidator.validateSurfaceArea(value),
+                          expands: false,
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Iconsax.maximize_3),
+                            labelText: 'Surface',
+                          ),
+                        ),
+
+                        const SizedBox(height: TSizes.spaceBtwInputFields),
+                        const Row(
                           children: [
                             Expanded(
-                              child: TextFormField(
-                                controller: controller.category,
-                                validator: (value) =>
-                                    TValidator.validateEmptyText(
-                                        'Category', value),
-                                expands: false,
-                                decoration: const InputDecoration(
-                                  prefixIcon: Icon(Iconsax.calculator),
-                                  labelText: 'Category',
-                                ),
-                              ),
+                              child: CategoryType(),
                             ),
-                            const SizedBox(width: TSizes.spaceBtwInputFields),
+                            SizedBox(width: TSizes.spaceBtwInputFields),
                             Expanded(
-                              child: TextFormField(
-                                controller: controller.status,
-                                validator: (value) =>
-                                    TValidator.validateEmptyText(
-                                        'Statut', value),
-                                expands: false,
-                                decoration: const InputDecoration(
-                                  prefixIcon: Icon(Iconsax.location),
-                                  labelText: 'Statut',
-                                ),
-                              ),
+                              child: StatusMenu(),
                             ),
                           ],
+                        ),
+                        const SizedBox(height: TSizes.spaceBtwInputFields),
+                        TextFormField(
+                          keyboardType: TextInputType.number,
+                          controller: controller.price,
+                          validator: (value) => TValidator.validatePrice(value),
+                          expands: false,
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(Iconsax.dollar_circle),
+                            labelText: 'Indiquer le prix en DH',
+                          ),
                         ),
 
                         const SizedBox(height: TSizes.spaceBtwInputFields),

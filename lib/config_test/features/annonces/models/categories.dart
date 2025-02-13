@@ -11,10 +11,10 @@ class TCategoriesModel {
 }
 
 List<TCategoriesModel> categories = [
-  TCategoriesModel(title: 'Maisons', icon: Iconsax.house),
-  TCategoriesModel(title: 'Villas', icon: Iconsax.house_2),
-  TCategoriesModel(title: 'Studios', icon: Iconsax.house_2),
-  TCategoriesModel(title: 'Immeubles', icon: Iconsax.buildings_2),
-  TCategoriesModel(title: 'Bureaux', icon: Iconsax.buliding),
-  TCategoriesModel(title: 'Appartements', icon: Iconsax.buildings),
+  TCategoriesModel(title: 'Maison', icon: Iconsax.house),
+  TCategoriesModel(title: 'Villa', icon: Iconsax.house_2),
+  TCategoriesModel(title: 'Studio', icon: Iconsax.house_2),
+  TCategoriesModel(title: 'Immeuble', icon: Iconsax.buildings_2),
+  TCategoriesModel(title: 'Bureau', icon: Iconsax.buliding),
+  TCategoriesModel(title: 'Appartement', icon: Iconsax.buildings),
 ];

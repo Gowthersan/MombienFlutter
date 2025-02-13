@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mombien_test/config_test/common/widgets/appbar/appbar.dart';
-import 'package:mombien_test/config_test/features/annonces/models/proprietes.dart';
 import 'package:mombien_test/config_test/features/annonces/screens/proprietes/widgets/overall_prop_rating.dart';
 import 'package:mombien_test/config_test/features/annonces/screens/proprietes/widgets/rating.dart';
 import 'package:mombien_test/config_test/features/annonces/screens/proprietes/widgets/reviews_list.dart';
+import 'package:mombien_test/config_test/features/personnalisation/controllers/property_controller.dart';
 import 'package:mombien_test/core.dart';
 
 class ProprietesReviewsScreen extends StatelessWidget {
-  const ProprietesReviewsScreen({super.key, required this.propertiesModel});
-
-  final TPropertiesModel propertiesModel;
+  const ProprietesReviewsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final propertyController = Get.put(PropertiesController());
     return Scaffold(
       appBar: TAppBar(
         title: Text('Revues & Notations',
@@ -32,8 +32,9 @@ class ProprietesReviewsScreen extends StatelessWidget {
               const SizedBox(height: TSizes.spaceBtwItems),
 
               ///Notations
-              TOverallProprietesRating(rating: propertiesModel.rating),
-              TRating(rating: propertiesModel.rating),
+              TOverallProprietesRating(
+                  rating: propertyController.property.value.rating),
+              TRating(rating: propertyController.property.value.rating),
               Text('999', style: Theme.of(context).textTheme.bodySmall),
               const SizedBox(height: TSizes.spaceBtwSections),
 
